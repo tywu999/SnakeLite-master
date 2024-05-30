@@ -4,23 +4,21 @@ import java.awt.event.*;
 
 public class SnakeGame extends JFrame {
 
+    private int highScore = 0; // High score
+    private char direction = 'R'; // Initial direction of the snake
+    private int speedUpTimer = 0; // Timer for speed up effect
+    private int speed = 0;
     private final int WIDTH = 600, HEIGHT = 450; // Size of the game window
     private final int DOT_SIZE = 10; // Size of the snake and food
-    private int[] x = new int[350]; // x coordinates of the snake's joints
-    private int[] y = new int[420]; // y coordinates of the snake's joints
     private int bodyParts = 3; // Initial size of the snake
     private int foodX; // X coordinate of food
     private int foodY; // Y coordinate of food
-    private int blueFoodX; // X coordinate of blue food
-    private int blueFoodY; // Y coordinate of blue food
-    private int fruitsEaten = 0; // Counter for the number of fruits eaten
-    private int highScore = 0; // High score
-    private char direction = 'R'; // Initial direction of the snake
+    private int[] x = new int[350]; // x coordinates of the snake's joints
     private boolean running = false; // Game state
     private Timer timer; // Timer for game updates
     private JPanel gamePanel; // Panel to control the game drawing area
-    private int speedUpTimer = 0; // Timer for speed up effect
-    private int speed = 0;
+    private int[] y = new int[420]; // y coordinates of the snake's joints
+    private int fruitsEaten = 0; // Counter for the number of fruits eaten
 
     public SnakeGame() {
         setResizable(false);
@@ -111,7 +109,6 @@ public class SnakeGame extends JFrame {
         if (running) {
             move();
             checkFood();
-            checkBlueFood();
             checkCollisions();
         }
         gamePanel.repaint();
@@ -148,14 +145,6 @@ public class SnakeGame extends JFrame {
         }
     }
 
-    private void checkBlueFood() {
-        if ((x[0] == blueFoodX) && (y[0] == blueFoodY)) {
-            bodyParts += 3; // Increase body length by 3
-            fruitsEaten += 3; // Increase score by 3
-            updateHighScore();
-            speedUpTimer = 180; // Speed up for 3 seconds (180 frames at 60 FPS)
-        }
-    }
 
     private void updateHighScore() {
         if (fruitsEaten > highScore) {
@@ -201,9 +190,6 @@ public class SnakeGame extends JFrame {
         if (running) {
             g.setColor(Color.red);
             g.fillRect(foodX, foodY, DOT_SIZE, DOT_SIZE);
-
-            g.setColor(Color.blue);
-            g.fillRect(blueFoodX, blueFoodY, DOT_SIZE, DOT_SIZE);
 
             for (int i = 0; i < bodyParts; i++) {
                 if (i == 0) {
